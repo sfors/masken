@@ -6,20 +6,17 @@
 
 (defonce state-atom (atom {:title "Masken!"}))
 
-(defn main!
-  []
-  (println "Hej!"))
 
 (defn button-clicked-handler
-  [{db :db} [event-name data]]
-  {:db (if (get db :counter)
-         (update db :counter inc)
-         (assoc db :counter 1))})
+  [{db :db} [_ id]]
+  {:db (if (get-in db [id :counter])
+         (update-in db [id :counter] inc)
+         (assoc-in db [id :counter] 1))})
 
 
 (defn query-counter
-  [db v]
-  (:counter db))
+  [db [_ id]]
+  (get-in db [id :counter]))
 
 
 (re-frame/reg-event-fx
@@ -38,5 +35,10 @@
 
 (defn on-reload
   {:dev/after-load true}
+  []
+  (render))
+
+
+(defn main!
   []
   (render))
