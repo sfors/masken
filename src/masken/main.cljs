@@ -9,9 +9,7 @@
 
 (defn button-clicked-handler
   [{db :db} [_ id]]
-  {:db (if (get-in db [id :counter])
-         (update-in db [id :counter] inc)
-         (assoc-in db [id :counter] 1))})
+  {:db (update-in db [id :counter] inc)})
 
 
 (defn query-counter
@@ -24,9 +22,27 @@
   button-clicked-handler)
 
 
+(re-frame/reg-event-fx
+  :tick
+  (fn [{db :db} _]
+    {:db (update db :time inc)}))
+
+
 (re-frame/reg-sub
   :query-counter
   query-counter)
+
+(re-frame/reg-sub
+  :query-time
+  (fn [db _]
+    (:time db)))
+
+(re-frame/reg-event-db
+  :initialize
+  (fn [_ _]
+    {:time 0
+     "1" {:counter 0}
+     "2" {:counter 0}}))
 
 
 (defn render
@@ -41,4 +57,6 @@
 
 (defn main!
   []
-  (render))
+  (re-frame/dispatch [:initialize])
+  (render)
+  (js/setInterval (fn [] (re-frame/dispatch [:tick])) 1000))
