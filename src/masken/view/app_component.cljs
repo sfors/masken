@@ -1,8 +1,17 @@
 (ns masken.view.app-component
-  (:require [rum.core :as rum]))
+  (:require [re-frame.core :as re-frame]))
 
-(rum/defc
-  app-component
+(defn button-component
+  []
+  (let [counter-atom (re-frame/subscribe [:query-counter])
+        counter (deref counter-atom)]
+    (println "button-component rendered")
+    [:button {:on-click (fn [] (re-frame/dispatch [:button-clicked "hej"]))} (str "Click me: " counter)]))
+
+
+(defn app-component
   []
   [:div [:h2 "Masken!"]
-   [:p "dsfsd"]])
+   (println "appcomponent rendered")
+   [button-component]])
+
