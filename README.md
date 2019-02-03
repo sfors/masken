@@ -6,5 +6,5 @@
 1. Install  
 ``npm install``
 1. Start development process  
-``shadow-cljs watch app``
+``npx shadow-cljs watch app``
 1. In intellij, new project from existing sources, choose ``deps.edn``
